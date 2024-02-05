@@ -1,5 +1,8 @@
 # API do Novo módulo de férias
 
+- [x] TOC
+      {:toc}
+
 ## findVacationInfo
 
 Traz as informações iniciais para alimentar tanto o calendário, quanto o painel esquerdo e inferior
@@ -62,12 +65,20 @@ Retorno:
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/1ba481f7-2c83-4758-804d-1f3509abed7b)
 
-O botão de venda de férias só é mostrado quando `vacation_cycle.rules.allow_sell_days = 1`, o número que aparece no botão vem de `vacation_cycle.rules.sell_days_limit`
+O botão de **Marcar Período de Férias** está inicialmente habilitado e fica desabilitado quando se está realizando uma marcação ou uma edição no calendário
+
+> [!NOTE]
+> Para saber seu funcionamento, consulte a seção [Marcando férias](#marcando-férias)
+
+O botão de venda de férias só é mostrado quando `vacation_cycle.rules.allow_sell_days = 1`. O número que aparece no botão vem de `vacation_cycle.rules.sell_days_limit`
 
 Existem outras regras que também ocultam esse botão:
 
 - Já existe uma venda de férias para esse ciclo registrada
 - A quantidade de dias que já foram retirados é maior ou igual ao limite de dias de venda
+
+> [!NOTE]
+> Para saber seu funcionamento, consulte a seção [Vendendo férias](#vendendo-férias)
 
 ### Painel esquerdo
 
@@ -95,7 +106,8 @@ As informações do tooltip se dividem entre **Valor Base**, **Valores negativos
 | Dias selecionados   | `taken_days` + `programmed_days` | Negativo |
 | Dias vendidos       | `sold_days`                      | Negativo |
 
-Se algum valor for zero, não precisa aparecer. Se só houver o valor base e todos os outros forem zerados, não precisa mostrar o tooltip
+> [!TIP]
+> Se algum valor for zero, não precisa aparecer. Se só houver o valor base e todos os outros forem zerados, não precisa mostrar o tooltip
 
 #### Faltas no período
 
@@ -117,7 +129,28 @@ Seus valores vêm de `programmed_days` e `taken_days`, respectivamente
 
 Seus valores também são atualizados em tempo real quando se está realizando uma marcação
 
-Os dias são programados quando eles estão sendo lançados **DEPOIS** da data atual, caso contrário, são dias já retirados
+> [!IMPORTANT]
+> Os dias são programados quando eles estão sendo lançados **DEPOIS** da data atual, caso contrário, são dias já retirados
 
 ## Calendário
 
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/b268253e-bce1-45bf-a16e-231aa886f166)
+
+O calendário começa desabilitado por padrão, para iniciar uma marcação, clica-se no botão **Marcar período de férias**
+
+A data inicial que aparece no calendário é o valor de `min_date`
+
+### Cores
+
+- ![#4299e1](https://via.placeholder.com/15/4299e1/4299e1.png) Período sendo selecionado para marcação
+- ![#f56565](https://via.placeholder.com/15/f56565/f56565.png) Data ou período inválido
+- ![#ecc94b](https://via.placeholder.com/15/ecc94b/ecc94b.png) Período marcado aguardando aprovação
+- ![#48bb78](https://via.placeholder.com/15/48bb78/48bb78.png) Período marcado aprovado
+- ![#a0aec0](https://via.placeholder.com/15/a0aec0/a0aec0.png) Período marcado de outro ciclo
+- ![#38b2ac](https://via.placeholder.com/15/38b2ac/38b2ac.png) Período sendo atualmente editado
+
+### Marcando férias
+
+Ao clicar no botão **Marcar período de férias**, o calendário é habilitado
+
+## Vendendo férias
