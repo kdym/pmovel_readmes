@@ -1,8 +1,5 @@
 # API do Novo módulo de férias
 
-- [x] TOC
-      {:toc}
-
 ## findVacationInfo
 
 Traz as informações iniciais para alimentar tanto o calendário, quanto o painel esquerdo e inferior
@@ -152,5 +149,16 @@ A data inicial que aparece no calendário é o valor de `min_date`
 ### Marcando férias
 
 Ao clicar no botão **Marcar período de férias**, o calendário é habilitado
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/83a76799-1fe4-4889-a575-75abdf182bf8)
+
+O período sendo selecionado é destacado em ![#4299e1](https://via.placeholder.com/15/4299e1/4299e1.png)
+
+Qualquer data inválida para marcação é destacado em ![#f56565](https://via.placeholder.com/15/f56565/f56565.png)
+
+> [!TIP]
+> Ao passar o mouse por cima, mostra-se um tooltip com o motivo da data inválida
+
+#### 
 
 ## Vendendo férias
