@@ -258,7 +258,7 @@ A tabela é alimentada por `partition_rules`
 
 ## prePeriodInfo
 
-Quando a primeira data é selecionada no calendário, faz as validações e retorna o resultado
+Quando a primeira data do período é selecionada no calendário, faz as validações e retorna o resultado
 
 ```
 POST /app/vacation_module/prePeriodInfo
@@ -268,15 +268,175 @@ POST /app/vacation_module/prePeriodInfo
 {
   "user_id": 35000,
   "vacation_cycle_id": 15088,
-   "start_date": req.body.start_date,
-      "days_to_take": req.body.days_to_take,
-      count: req.body.count,
-      editing_date: req.body.editing_date,
+  "start_date": "2025-02-04",
+  "days_to_take": 25,
+  "count": 0,
+  "editing_date": null
 }
 ```
+
+| Campo                 | Descrição                                                           |
+| --------------------- | ------------------------------------------------------------------- |
+| **user_id**           | ID do usuário atualmente logado                                     |
+| **vacation_cycle_id** | ID do ciclo                                                         |
+| **start_date**        | Data selecionada                                                    |
+| **days_to_take**      | Mesmo valor do dias à retirar que veio da função `findVacationInfo` |
+| **count**             | Quantidade de ciclos já cadastrados nessa seleção                   |
+| **editing_date**      | Se é uma data sendo editada, veja [Editando](#editando)             |
 
 Retorno:
 
 ```json
+[
+  {
+    "message": "Não é possivel cadastrar em ciclos já existentes",
+    "type": "period",
+    "dates": ["2025-02-10", "2025-02-14"]
+  },
+  {
+    "dates": ["2025-02-08"],
+    "type": "period",
+    "message": "Período contém dias não permitidos: Sábado"
+  },
+  {
+    "dates": ["2025-02-15"],
+    "type": "period",
+    "message": "Período contém dias não permitidos: Sábado"
+  },
+  {
+    "dates": ["2025-02-22"],
+    "type": "period",
+    "message": "Período contém dias não permitidos: Sábado"
+  },
+  {
+    "dates": ["2025-03-01"],
+    "type": "period",
+    "message": "Período contém dias não permitidos: Sábado"
+  },
+  {
+    "dates": ["2025-02-04"],
+    "type": "period",
+    "message": "Só é permitido marcar no primeiro dia útil da semana"
+  }
+]
+```
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/4437d663-fe6a-43ef-ac23-c22bd61452f6)
+
+Os erros podem ser de dois tipos:
+
+- `period` - erros dentro do período do calendário, pode ser de uma única data ou um range entre duas datas
+- `general` - erros que não englobam uma data específica e sim o ciclo todo, como o erro de particionamento de dias (veja [Regras de Particionamento](#regras-de-particionamento))
+
+## postPeriodInfo
+
+Quando a segunda data do período é selecionada no calendário, faz as validações e retorna o resultado
 
 ```
+POST /app/vacation_module/postPeriodInfo
+```
+
+```json
+{
+  "user_id": 35000,
+  "vacation_cycle_id": 15088,
+  "start_date": "2025-02-03",
+  "end_date": "2025-02-07",
+  "days_to_take": 25,
+  "selected_dates": [
+    {
+      "start_date": "2025-02-03",
+      "end_date": "2025-02-07"
+    }
+  ]
+}
+```
+
+| Campo                 | Descrição                                                                                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **user_id**           | ID do usuário atualmente logado                                                                                                                   |
+| **vacation_cycle_id** | ID do ciclo                                                                                                                                       |
+| **start_date**        | Início do período                                                                                                                                 |
+| **end_date**          | Final do período                                                                                                                                  |
+| **days_to_take**      | Mesmo valor do dias à retirar que veio da função `findVacationInfo`                                                                               |
+| **selected_dates**    | Array com todos os períodos selecionados no mesmo request, incluindo o período atual, no caso de múltiplos períodos serem selecionados de uma vez |
+
+Retorno:
+
+O mesmo retorno do [prePeriodInfo](#preperiodinfo)
+
+## finalizeMarkingVacations
+
+Depois de validado todos os erros, salva os períodos selecionados
+
+```
+POST /app/vacation_module/finalizeMarkingVacations
+```
+
+```json
+{
+  "user_id": 35000,
+  "vacation_cycle_id": 15088,
+  "periods": [
+    {
+      "edit": false,
+      "start_date": "2025-02-19",
+      "end_date": "2025-02-20",
+      "requested_13": false
+    },
+    {
+      "edit": false,
+      "start_date": "2025-02-23",
+      "end_date": "2025-02-24",
+      "requested_13": false
+    }
+  ]
+}
+```
+
+## approveVacation
+
+Aprovar um pedido de férias
+
+```
+POST /app/vacation_module/approveVacation
+```
+
+```json
+{
+  "user_id": 212,
+  "vacation_subcycle_id": 4709
+}
+```
+
+## denyVacation
+
+Negar um pedido de férias
+
+```
+POST /app/vacation_module/denyVacation
+```
+
+```json
+{
+  "user_id": 212,
+  "vacation_subcycle_id": 4708,
+  "obs": "pq sim"
+}
+```
+
+## deleteVacation
+
+Excluir um pedido de férias
+
+```
+POST /app/vacation_module/deleteVacation
+```
+
+```json
+{
+  "vacation_subcycle_id": 4708
+}
+```
+
+## Editando
