@@ -121,13 +121,13 @@ Seus valores vêm de `programmed_days` e `taken_days`, respectivamente
 > [!IMPORTANT]
 > Os dias são programados quando eles estão sendo lançados **DEPOIS** da data atual, caso contrário, são dias já retirados
 
-## Calendário
+### Calendário
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/e77a6a0d-7ba3-4634-a9a8-776463fd67a8)
 
 A data inicial que aparece no calendário é o valor de `min_date` com o máximo definido por `max_date`. Esses valores podem ser nulos
 
-### Cores
+#### Cores
 
 | Cor                                                          | Descrição                               |
 | ------------------------------------------------------------ | --------------------------------------- |
@@ -138,19 +138,19 @@ A data inicial que aparece no calendário é o valor de `min_date` com o máximo
 | ![#a0aec0](https://via.placeholder.com/15/a0aec0/a0aec0.png) | Período marcado de outro ciclo          |
 | ![#38b2ac](https://via.placeholder.com/15/38b2ac/38b2ac.png) | Período sendo atualmente editado        |
 
-### Data atual
+#### Data atual
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/0ca38d6a-3f7a-42e4-a920-d226bf4083ba)
 
 Vem do sistema
 
-### Feriado
+#### Feriado
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/f38621aa-921b-4342-9ca0-4f7663a96907)
 
 Vem de `holidays`
 
-### Subcycles
+#### Subcycles
 
 O array `subcycles` alimenta tanto o calendário quanto a tabela abaixo do calendário e podem ocorrer os seguintes casos:
 
@@ -242,16 +242,41 @@ Quando `selling=true`, o registro não aparece no calendário, somente na tabela
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/92e0fc3f-78c6-412b-85b4-53da8bcc1747)
 
-## Solicitar adiantamento do 13º
+### Solicitar adiantamento do 13º
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/9d78ba5a-ed4d-4c1b-883e-d470a17038df)
 
 Quando `vacation_cycle.rules.allow_request_13=1` e o mês selecionado estiver dentro de `vacation_cycle.rules.range_13`, esse botão é mostrado
 
-## Regras de particionamento
+### Regras de particionamento
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/06878bec-e9cf-4e9b-9237-cd08ed8e57cc)
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/c442463b-6ce6-4ce0-ba6a-901733b36ad4)
 
 A tabela é alimentada por `partition_rules`
+
+## prePeriodInfo
+
+Quando a primeira data é selecionada no calendário, faz as validações e retorna o resultado
+
+```
+POST /app/vacation_module/prePeriodInfo
+```
+
+```json
+{
+  "user_id": 35000,
+  "vacation_cycle_id": 15088,
+   "start_date": req.body.start_date,
+      "days_to_take": req.body.days_to_take,
+      count: req.body.count,
+      editing_date: req.body.editing_date,
+}
+```
+
+Retorno:
+
+```json
+
+```
