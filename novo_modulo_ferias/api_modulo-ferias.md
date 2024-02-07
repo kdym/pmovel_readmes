@@ -10,8 +10,8 @@ POST /app/vacation_module/findVacationInfo
 
 ```json
 {
-  "user_id": 35000, // ID do usuário atualmente logado
-  "vacation_cycle_id": 15088 // ID do ciclo de férias
+  "user_id": 35000,
+  "vacation_cycle_id": 15088
 }
 ```
 
@@ -37,7 +37,20 @@ Retorno:
       "allow_sell_days": 1,
       "sell_days_limit": 15,
       "allow_request_13": 1,
-      "range_13": [""],
+      "range_13": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
       "limit_cycles": 3
     }
   },
@@ -62,20 +75,7 @@ Retorno:
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/1ba481f7-2c83-4758-804d-1f3509abed7b)
 
-O botão de **Marcar Período de Férias** está inicialmente habilitado e fica desabilitado quando se está realizando uma marcação ou uma edição no calendário
-
-> [!NOTE]
-> Para saber seu funcionamento, consulte a seção [Marcando férias](#marcando-férias)
-
 O botão de venda de férias só é mostrado quando `vacation_cycle.rules.allow_sell_days = 1`. O número que aparece no botão vem de `vacation_cycle.rules.sell_days_limit`
-
-Existem outras regras que também ocultam esse botão:
-
-- Já existe uma venda de férias para esse ciclo registrada
-- A quantidade de dias que já foram retirados é maior ou igual ao limite de dias de venda
-
-> [!NOTE]
-> Para saber seu funcionamento, consulte a seção [Vendendo férias](#vendendo-férias)
 
 ### Painel esquerdo
 
@@ -85,15 +85,9 @@ Existem outras regras que também ocultam esse botão:
 
 Essa informação vem de `days_to_take`
 
-Quando um período de férias está sendo marcado, essa informação se atualiza temporariamente, junto com outros valores. Ao terminar ou cancelar a marcação, retorna-se ao valor de `days_to_take`
-
-![image](https://github.com/kdym/pmovel_readmes/assets/30319490/9fe6f5ad-5ab7-43db-ab67-05fdaac6f786)
-
-Quando existem coisas que alteram o valor base dos dias a serem retirados, mostra-se um tooltip explicando os motivos:
+#### Tooltip
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/c1b4d544-887b-4f34-ad66-c25c2c71ac6d)
-
-As informações do tooltip se dividem entre **Valor Base**, **Valores negativos** e **Valores positivos**. Podem aparecer as seguintes informações:
 
 | Descrição           | Campo                            | Tipo     |
 | ------------------- | -------------------------------- | -------- |
@@ -116,7 +110,7 @@ O seu valor vem de `faults`
 
 ![image](https://github.com/kdym/pmovel_readmes/assets/30319490/0d4c1d38-44bc-497b-bd25-c6065b45ca44)
 
-Esse painel aparece no lugar do painel de Faltas no período quando `expiration_date != null`, seu valor vem do próprio `expiration_date`
+Esse painel aparece no lugar do painel de **Faltas no período** quando `expiration_date != null`, seu valor vem do próprio `expiration_date`
 
 #### Dias programados e retirados
 
@@ -124,41 +118,140 @@ Esse painel aparece no lugar do painel de Faltas no período quando `expiration_
 
 Seus valores vêm de `programmed_days` e `taken_days`, respectivamente
 
-Seus valores também são atualizados em tempo real quando se está realizando uma marcação
-
 > [!IMPORTANT]
 > Os dias são programados quando eles estão sendo lançados **DEPOIS** da data atual, caso contrário, são dias já retirados
 
 ## Calendário
 
-![image](https://github.com/kdym/pmovel_readmes/assets/30319490/b268253e-bce1-45bf-a16e-231aa886f166)
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/e77a6a0d-7ba3-4634-a9a8-776463fd67a8)
 
-O calendário começa desabilitado por padrão, para iniciar uma marcação, clica-se no botão **Marcar período de férias**
-
-A data inicial que aparece no calendário é o valor de `min_date`
+A data inicial que aparece no calendário é o valor de `min_date` com o máximo definido por `max_date`. Esses valores podem ser nulos
 
 ### Cores
 
-- ![#4299e1](https://via.placeholder.com/15/4299e1/4299e1.png) Período sendo selecionado para marcação
-- ![#f56565](https://via.placeholder.com/15/f56565/f56565.png) Data ou período inválido
-- ![#ecc94b](https://via.placeholder.com/15/ecc94b/ecc94b.png) Período marcado aguardando aprovação
-- ![#48bb78](https://via.placeholder.com/15/48bb78/48bb78.png) Período marcado aprovado
-- ![#a0aec0](https://via.placeholder.com/15/a0aec0/a0aec0.png) Período marcado de outro ciclo
-- ![#38b2ac](https://via.placeholder.com/15/38b2ac/38b2ac.png) Período sendo atualmente editado
+| Cor                                                          | Descrição                               |
+| ------------------------------------------------------------ | --------------------------------------- |
+| ![#4299e1](https://via.placeholder.com/15/4299e1/4299e1.png) | Período sendo selecionado para marcação |
+| ![#f56565](https://via.placeholder.com/15/f56565/f56565.png) | Data ou período inválido                |
+| ![#ecc94b](https://via.placeholder.com/15/ecc94b/ecc94b.png) | Período marcado aguardando aprovação    |
+| ![#48bb78](https://via.placeholder.com/15/48bb78/48bb78.png) | Período marcado aprovado                |
+| ![#a0aec0](https://via.placeholder.com/15/a0aec0/a0aec0.png) | Período marcado de outro ciclo          |
+| ![#38b2ac](https://via.placeholder.com/15/38b2ac/38b2ac.png) | Período sendo atualmente editado        |
 
-### Marcando férias
+### Data atual
 
-Ao clicar no botão **Marcar período de férias**, o calendário é habilitado
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/0ca38d6a-3f7a-42e4-a920-d226bf4083ba)
 
-![image](https://github.com/kdym/pmovel_readmes/assets/30319490/83a76799-1fe4-4889-a575-75abdf182bf8)
+Vem do sistema
 
-O período sendo selecionado é destacado em ![#4299e1](https://via.placeholder.com/15/4299e1/4299e1.png)
+### Feriado
 
-Qualquer data inválida para marcação é destacado em ![#f56565](https://via.placeholder.com/15/f56565/f56565.png)
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/f38621aa-921b-4342-9ca0-4f7663a96907)
 
-> [!TIP]
-> Ao passar o mouse por cima, mostra-se um tooltip com o motivo da data inválida
+Vem de `holidays`
 
-#### 
+### Subcycles
 
-## Vendendo férias
+O array `subcycles` alimenta tanto o calendário quanto a tabela abaixo do calendário e podem ocorrer os seguintes casos:
+
+```json
+{
+  "id": 4701,
+  "start_date": "2025-02-10",
+  "end_date": "2025-02-14",
+  "requested_13": 0,
+  "days": 5,
+  "type": "Férias",
+  "status": "approved",
+  "status_string": "Aprovado",
+  "approvers": [
+    {
+      "date": "2024-02-07 13:02:15",
+      "approver": {
+        "name": "3 - DDIT - THIAGO CEZAR",
+        "role": "Gestor"
+      },
+      "status": "approved",
+      "obs": null
+    },
+    {
+      "date": "2024-02-07 11:10:15",
+      "approver": {
+        "name": "212 - HENRIQUE ALVES SIMEÃO",
+        "role": "Gestor RH"
+      },
+      "status": "approved",
+      "obs": null
+    }
+  ],
+  "calendar": {
+    "tooltip": "Período de férias aprovado",
+    "color": "green"
+  },
+  "can": {
+    "approve": false,
+    "deny": false,
+    "edit": false,
+    "delete": true
+  },
+  "in_cycle": true
+}
+```
+
+A informação que será mostrada no calendário utiliza o `start_date` e o `end_date`. A cor e os dados que vão aparecer no tooltip vem de `calendar`
+
+O registro só aparece na tabela quando `in_cycle=true`. O registro aparece no calendário em qualquer um dos casos, mas a cor muda seguindo o código de cores do calendário (veja [Cores](#cores))
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/85daa906-7591-4d42-8f85-18b7f675f69d)
+
+| Coluna | Descrição                                                                         |
+| ------ | --------------------------------------------------------------------------------- |
+| 1      | Um número sequencial, não representa o ID do registro                             |
+| 2      | Período selecionado, vem de `start_date` e `end_date`                             |
+| 3      | Dias selecionados, vem de `days`                                                  |
+| 4      | Tipo de lançamento, vem de `type`                                                 |
+| 5      | Status, vem de `status_string`                                                    |
+| 6      | Ações que podem ser realizadas, a visibilidade dos botões é controlada pelo `can` |
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/1be215fd-1340-4f2c-8ea9-98579322a39f)
+
+Quando `requested_13=1`, esse tooltip é mostrado
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/c6ed2d48-3b68-49d3-80c9-ab9f00376501)
+
+Quando o período de férias foi aprovado, o array `approvers` alimenta esse tooltip
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/bc3bdd57-a614-4510-80d6-eab6a55554ba)
+
+Quando o período for negado, a justificativa vem de `approvers.obs`
+
+```json
+{
+  "id": 4704,
+  "selling": true,
+  "days": 15,
+  "type": "Venda de dias",
+  "can": {
+    "delete": true
+  },
+  "in_cycle": true
+}
+```
+
+Quando `selling=true`, o registro não aparece no calendário, somente na tabela, contanto que `in_cycle=true`
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/92e0fc3f-78c6-412b-85b4-53da8bcc1747)
+
+## Solicitar adiantamento do 13º
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/9d78ba5a-ed4d-4c1b-883e-d470a17038df)
+
+Quando `vacation_cycle.rules.allow_request_13=1` e o mês selecionado estiver dentro de `vacation_cycle.rules.range_13`, esse botão é mostrado
+
+## Regras de particionamento
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/06878bec-e9cf-4e9b-9237-cd08ed8e57cc)
+
+![image](https://github.com/kdym/pmovel_readmes/assets/30319490/c442463b-6ce6-4ce0-ba6a-901733b36ad4)
+
+A tabela é alimentada por `partition_rules`
